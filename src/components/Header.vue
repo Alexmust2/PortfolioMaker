@@ -1,43 +1,71 @@
 <template>
   <header>
-    <h1>Иван Иванов</h1>
-    <nav>
-      <a href="#experience">Опыт</a>
-      <a href="#projects">Проекты</a>
-      <a href="#contact">Контакты</a>
+    <nav class="container">
+      <router-link to="/" class="logo">Резюме Билдер</router-link>
+      <div class="nav-links">
+        <template v-if="isAuthenticated">
+          <router-link to="/profile">Профиль</router-link>
+          <router-link to="/resume/create">Создать резюме</router-link>
+          <a href="#" @click.prevent="handleLogout">Выйти</a>
+        </template>
+        <template v-else>
+          <router-link to="/">Войти</router-link>
+        </template>
+      </div>
     </nav>
   </header>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
-  name: 'Header'
+  name: 'Header',
+  computed: {
+    ...mapGetters(['isAuthenticated'])
+  },
+  methods: {
+    ...mapActions(['logout']),
+    async handleLogout() {
+      await this.logout()
+      this.$router.push('/')
+    }
+  }
 }
 </script>
 
 <style scoped>
 header {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
-  border-bottom: 2px solid #2c3e50;
+  padding: 15px 0;
 }
 
-h1 {
-  font-size: 2.5em;
-  margin: 0;
-}
-
-nav a {
-  margin-left: 20px;
+.logo {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--primary-color);
   text-decoration: none;
-  color: #2c3e50;
-  font-weight: bold;
-  transition: color 0.3s;
 }
 
-nav a:hover {
-  color: #3498db;
+.nav-links a {
+  color: var(--text-color);
+  text-decoration: none;
+  margin-left: 25px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--primary-color);
 }
 </style>
